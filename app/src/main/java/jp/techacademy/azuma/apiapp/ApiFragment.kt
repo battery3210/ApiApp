@@ -1,16 +1,15 @@
 package jp.techacademy.azuma.apiapp
 
+import android.util.Log
 import android.content.Context
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import com.google.gson.Gson
 import kotlinx.android.synthetic.main.fragment_api.*
 import okhttp3.*
@@ -22,6 +21,15 @@ class ApiFragment: Fragment() {
     private val apiAdapter by lazy { ApiAdapter(requireContext()) }
     private val handler = Handler(Looper.getMainLooper())
 
+    private var fragmentCallback : FragmentCallback? = null
+
+    override  fun onAttach(context: Context){
+        super.onAttach(context)
+        if (context is FragmentCallback){
+            fragmentCallback = context
+        }
+    }
+
     override  fun onCreateView(inflater: LayoutInflater,container: ViewGroup?,savedInstanceState: Bundle?): View? {
         return inflater.inflate(R.layout.fragment_api,container,false) //fragment_api.xmlが反映されたViewを作成して、return
     }
@@ -29,6 +37,12 @@ class ApiFragment: Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         // ここから初期化処理を行う
+        //ApiAdapterのお気に入り追加、削除用のメソッドの追加を行う
+        apiAdapter.apply {
+            onClickAddFavorite = { // Adapterの処理をそのままActivityに通知する
+                fragmentCallback?.onDeleteFavorite(it.id)
+            }
+        }
         // RecyclerViewの初期化
         recyclerView.apply {
             adapter = apiAdapter
@@ -40,6 +54,9 @@ class ApiFragment: Fragment() {
         updateData()
     }
 
+    fun updateView(){
+        recyclerView.adapter?.notifyDataSetChanged() // RecyclerViewのAdapterに対して再描画のリクエストをする
+    }
 
     private fun updateData(){
         val url = StringBuilder()

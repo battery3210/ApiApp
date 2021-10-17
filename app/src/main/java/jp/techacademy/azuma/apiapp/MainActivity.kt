@@ -31,7 +31,37 @@ class MainActivity : AppCompatActivity(),FragmentCallback  {
 
         }
 
+    override fun onAddFavorite(shop: Shop) { // Favoriteに追加するときのメソッド(Fragment -> Activity へ通知する)
+        FavoriteShop.insert(FavoriteShop().apply {
+            id = shop.id
+            name = shop.name
+            imageUrl = shop.logoImage
+            url = if (shop.couponUrls.sp.isNotEmpty()) shop.couponUrls.sp else shop.couponUrls.pc
+        })
+        (viewPagerAdapter.fragments[VIEW_PAGER_POSITION_FAVORITE] as FavoriteFragment).updateData()
+    }
 
+    override fun onDeleteFavorite(id: String) { // Favoriteから削除するときのメソッド(Fragment -> Activity へ通知する)
+        showConfirmDeleteFavoriteDialog(id)
+    }
+
+    private fun showConfirmDeleteFavoriteDialog(id: String) {
+        AlertDialog.Builder(this)
+            .setTitle(R.string.delete_favorite_dialog_title)
+            .setMessage(R.string.delete_favorite_dialog_message)
+            .setPositiveButton(android.R.string.ok) { _, _ ->
+                deleteFavorite(id)
+            }
+            .setNegativeButton(android.R.string.cancel) { _, _ ->}
+            .create()
+            .show()
+    }
+
+    private fun deleteFavorite(id: String) {
+        FavoriteShop.delete(id)
+        (viewPagerAdapter.fragments[VIEW_PAGER_POSITION_API] as ApiFragment).updateView()
+        (viewPagerAdapter.fragments[VIEW_PAGER_POSITION_FAVORITE] as FavoriteFragment).updateData()
+    }
 
 
     companion object {
@@ -39,13 +69,6 @@ class MainActivity : AppCompatActivity(),FragmentCallback  {
         private const val VIEW_PAGER_POSITION_FAVORITE = 1
     }
 
-    override fun onAddFavorite(shop: Shop) {
-        TODO("Not yet implemented")
-    }
-
-    override fun onDeleteFavorite(id: String) {
-        TODO("Not yet implemented")
-    }
 
 
 }
