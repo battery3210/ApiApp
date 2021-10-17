@@ -74,7 +74,7 @@ class ApiAdapter(private val context: Context): RecyclerView.Adapter<RecyclerVie
             }
             // nameTextViewのtextプロパティに代入されたオブジェクトのnameプロパティを代入
             nameTextView.text = data.name
-            // Picassoライブラリを使い、imageViewにdata.logoImageのurlの画像を読み込ませる
+            // Picassoライブラリを使い、imageViewにdata.logoImageのurlの画像を読み込ませるｓｓ
             Picasso.get().load(data.logoImage).into(imageView)
             // 白抜きの星マークの画像を指定
             favoriteImageView.apply {
