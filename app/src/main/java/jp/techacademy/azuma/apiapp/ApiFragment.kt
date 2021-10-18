@@ -21,7 +21,7 @@ class ApiFragment: Fragment() {
     private val apiAdapter by lazy { ApiAdapter(requireContext()) }
     private val handler = Handler(Looper.getMainLooper())
 
-    private var fragmentCallback : FragmentCallback? = null
+    private var fragmentCallback : FragmentCallback? = null // Fragment -> Activity にFavoriteの変更を通知する
 
     override  fun onAttach(context: Context){
         super.onAttach(context)
@@ -31,7 +31,7 @@ class ApiFragment: Fragment() {
     }
 
     override  fun onCreateView(inflater: LayoutInflater,container: ViewGroup?,savedInstanceState: Bundle?): View? {
-        return inflater.inflate(R.layout.fragment_api,container,false) //fragment_api.xmlが反映されたViewを作成して、return
+        return inflater.inflate(R.layout.fragment_api,container,false) //fragment_api.xmlが反映されたViewを作成して、return33
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -39,7 +39,10 @@ class ApiFragment: Fragment() {
         // ここから初期化処理を行う
         //ApiAdapterのお気に入り追加、削除用のメソッドの追加を行う
         apiAdapter.apply {
-            onClickAddFavorite = { // Adapterの処理をそのままActivityに通知する
+            onClickAddFavorite = {
+                fragmentCallback?.onAddFavorite(it)
+            }
+            onClickDeleteFavorite  = { // Adapterの処理をそのままActivityに通知する
                 fragmentCallback?.onDeleteFavorite(it.id)
             }
         }

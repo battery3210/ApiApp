@@ -7,7 +7,7 @@ import androidx.viewpager2.widget.ViewPager2
 import com.google.android.material.tabs.TabLayoutMediator
 import kotlinx.android.synthetic.main.activity_main.*
 
-class MainActivity : AppCompatActivity(),FragmentCallback  {
+class MainActivity : AppCompatActivity(), FragmentCallback {
 
     private val viewPagerAdapter by lazy { ViewPagerAdapter(this) }
 
@@ -15,21 +15,20 @@ class MainActivity : AppCompatActivity(),FragmentCallback  {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        //viewPager2の初期化
+        // ViewPager2の初期化
         viewPager2.apply {
             adapter = viewPagerAdapter
-            orientation = ViewPager2.ORIENTATION_HORIZONTAL //スワイプの向き横（ORIENTATION_VERTICAL指定なら縦スワイプで可能）
-            offscreenPageLimit = viewPagerAdapter.itemCount //ViewPager2で保持する画面数
+            orientation = ViewPager2.ORIENTATION_HORIZONTAL // スワイプの向き横（ORIENTATION_VERTICAL を指定すれば縦スワイプで実装可能です）
+            offscreenPageLimit = viewPagerAdapter.itemCount // ViewPager2で保持する画面数
         }
 
-        //tablayoutの初期化
-        //tablayoutとViewPager2を紐づける
-        //TabLayoutのTextを指定する
-        TabLayoutMediator(tabLayout,viewPager2) { tab, position ->
+        // TabLayoutの初期化
+        // TabLayoutとViewPager2を紐づける
+        // TabLayoutのTextを指定する
+        TabLayoutMediator(tabLayout, viewPager2) { tab, position ->
             tab.setText(viewPagerAdapter.titleIds[position])
         }.attach()
-
-        }
+    }
 
     override fun onAddFavorite(shop: Shop) { // Favoriteに追加するときのメソッド(Fragment -> Activity へ通知する)
         FavoriteShop.insert(FavoriteShop().apply {
@@ -63,12 +62,8 @@ class MainActivity : AppCompatActivity(),FragmentCallback  {
         (viewPagerAdapter.fragments[VIEW_PAGER_POSITION_FAVORITE] as FavoriteFragment).updateData()
     }
 
-
     companion object {
         private const val VIEW_PAGER_POSITION_API = 0
         private const val VIEW_PAGER_POSITION_FAVORITE = 1
     }
-
-
-
 }
