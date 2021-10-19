@@ -2,6 +2,7 @@ package jp.techacademy.azuma.apiapp
 
 import android.content.Context
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -36,6 +37,11 @@ class FavoriteFragment: Fragment() {
             // Adapterの処理をそのままActivityに通知
             onClickDeleteFavorite = {
                 fragmentCallback?.onDeleteFavorite(it.id)
+            }
+            //Itemをクリックしたとき
+            onClickItem = {
+                fragmentCallback?.onClickItem(it)
+                Log.d("test","success")
             }
         }
         // RecyclerViewの初期化

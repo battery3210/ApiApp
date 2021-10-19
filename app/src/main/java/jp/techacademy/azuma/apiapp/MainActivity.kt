@@ -2,6 +2,7 @@ package jp.techacademy.azuma.apiapp
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
 import androidx.appcompat.app.AlertDialog
 import androidx.viewpager2.widget.ViewPager2
 import com.google.android.material.tabs.TabLayoutMediator
@@ -28,6 +29,11 @@ class MainActivity : AppCompatActivity(), FragmentCallback {
         TabLayoutMediator(tabLayout, viewPager2) { tab, position ->
             tab.setText(viewPagerAdapter.titleIds[position])
         }.attach()
+    }
+
+    override fun onClickItem(url: String){
+        WebViewActivity.start(this,url)
+        Log.d("test","success")
     }
 
     override fun onAddFavorite(shop: Shop) { // Favoriteに追加するときのメソッド(Fragment -> Activity へ通知する)

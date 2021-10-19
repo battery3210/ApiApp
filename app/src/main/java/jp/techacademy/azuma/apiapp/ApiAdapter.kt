@@ -21,13 +21,34 @@ class ApiAdapter(private val context: Context): RecyclerView.Adapter<RecyclerVie
     // 一覧画面から削除するときのコールバック（ApiFragmentへ通知するメソッド)
     var onClickDeleteFavorite: ((Shop) -> Unit)? = null
 
+    //Itemを押したときのメソッド
+    var onClickItem: ((String) -> Unit)? = null
+
+    fun refresh(list: List<Shop>) {
+        update(list,false)
+    }
+    fun add(list: List<Shop>){
+        update(list,true)
+    }
+
     // 表示リスト更新時に呼び出すメソッド
+    /*
     fun refresh(list: List<Shop>) {
         items.apply {
             clear() // items を 空にする
             addAll(list) // itemsにlistを全て追加する
         }
         notifyDataSetChanged() // recyclerViewを再描画させる
+    }
+     */
+    fun update(list: List<Shop>, isAdd: Boolean) {
+        items.apply {
+            if(!isAdd){
+                clear()
+            }
+            addAll(list)
+        }
+        notifyDataSetChanged()
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
@@ -71,6 +92,9 @@ class ApiAdapter(private val context: Context): RecyclerView.Adapter<RecyclerVie
                 // 偶数番目と奇数番目で背景色を変更させる
                 setBackgroundColor(ContextCompat.getColor(context,
                     if (position % 2 == 0) android.R.color.white else android.R.color.darker_gray))
+                setOnClickListener{
+                    onClickItem?.invoke((if(data.couponUrls.sp.isNotEmpty()) data.couponUrls.sp else data.couponUrls.pc))
+                }
             }
             // nameTextViewのtextプロパティに代入されたオブジェクトのnameプロパティを代入
             nameTextView.text = data.name
