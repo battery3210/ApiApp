@@ -58,29 +58,11 @@ class FavoriteAdapter(private val context: Context): RecyclerView.Adapter<Recycl
         }
     }
 
-    //ViewHolder内のUI部品に値などをセット
-    private fun updateFavoriteItemViewHolder(holder: FavoriteItemViewHolder, position: Int) {
-        val data = items[position]
-        holder.apply {
-            rootView.apply {
-                setBackgroundColor(ContextCompat.getColor(context, if (position % 2 == 0) android.R.color.white else android.R.color.darker_gray)) // 偶数番目と機数番目で背景色を変更させる
-                setOnClickListener{
-                    onClickItem?.invoke(data.url)
-                }
-            }
-            nameTextView.text = data.name
-            Picasso.get().load(data.imageUrl).into(imageView) // Picassoというライブラリを使ってImageVIewに画像をはめ込む
-            favoriteImageView.setOnClickListener {
-                onClickDeleteFavorite?.invoke(data)
-                notifyItemChanged(position)
-            }
-        }
-    }
-
     // お気に入りが登録されているときのリスト
     class FavoriteItemViewHolder(view: View): RecyclerView.ViewHolder(view) {
         val rootView : ConstraintLayout = view.findViewById(R.id.rootView)
         val nameTextView: TextView = view.findViewById(R.id.nameTextView)
+        val nameAddressView: TextView = view.findViewById(R.id.nameAddressView)
         val imageView: ImageView = view.findViewById(R.id.imageView)
         val favoriteImageView: ImageView = view.findViewById(R.id.favoriteImageView)
     }
@@ -93,6 +75,27 @@ class FavoriteAdapter(private val context: Context): RecyclerView.Adapter<Recycl
         private const val VIEW_TYPE_ITEM = 0
         // Viewの種類を表現する定数、こちらはお気に入りが１件もないとき
         private const val VIEW_TYPE_EMPTY = 1
+    }
+
+
+    //ViewHolder内のUI部品に値などをセット
+    private fun updateFavoriteItemViewHolder(holder: FavoriteItemViewHolder, position: Int) {
+        val data = items[position]
+        holder.apply {
+            rootView.apply {
+                setBackgroundColor(ContextCompat.getColor(context, if (position % 2 == 0) android.R.color.white else android.R.color.darker_gray)) // 偶数番目と機数番目で背景色を変更させる
+                setOnClickListener{
+                    onClickItem?.invoke(data.url)
+                }
+            }
+            nameTextView.text = data.name
+            nameAddressView.text = data.address
+            Picasso.get().load(data.imageUrl).into(imageView) // Picassoというライブラリを使ってImageVIewに画像をはめ込む
+            favoriteImageView.setOnClickListener {
+                onClickDeleteFavorite?.invoke(data)
+                notifyItemChanged(position)
+            }
+        }
     }
 
 }
